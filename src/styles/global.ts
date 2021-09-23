@@ -102,5 +102,5 @@ export const LoadingContainer = styled.div`
   align-Items: center;
   justify-content: center;
 
-  margin-top: 50px;
+  margin: 50px 0;
 `;

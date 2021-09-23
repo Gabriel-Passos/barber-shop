@@ -30,7 +30,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   const [productId, setProductId] = useState<number>(Number);
 
   const [cart, setCart] = useState<ProductData[]>(() => {
-    const storagedCart = localStorage.getItem('@BarberShop:cart');
+    const storagedCart = localStorage.getItem('@BarberShop:Cart');
 
     if (storagedCart) {
       return JSON.parse(storagedCart);
@@ -57,7 +57,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
         if (productInStock.amount > 0) {
           setCart([...cart, {...productApi, amount: 1}]);
-          localStorage.setItem('@BarberShop:cart', JSON.stringify([...cart, {...productApi, amount: 1}]));
+          localStorage.setItem('@BarberShop:Cart', JSON.stringify([...cart, {...productApi, amount: 1}]));
           toast.success('Produto adicionado ao carinho');
           return;
         }
@@ -73,7 +73,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
           );
 
           setCart(updatedCart);
-          localStorage.setItem('@BarberShop:cart', JSON.stringify(updatedCart));
+          localStorage.setItem('@BarberShop:Cart', JSON.stringify(updatedCart));
           toast.info('Produto atualizado no carrinho');
         } else {
           toast.error('Quantidade solicitada fora de estoque');
@@ -94,7 +94,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
       const updatedCart = cart.filter(cartItem => cartItem.id !== productId);
       setCart(updatedCart);
-      localStorage.setItem('@BarberShop:cart', JSON.stringify(updatedCart));
+      localStorage.setItem('@BarberShop:Cart', JSON.stringify(updatedCart));
     } catch {
       toast.error('Erro na remoção do produto');
     }
@@ -131,7 +131,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       );
 
       setCart(updatedCart);
-      localStorage.setItem('@BarberShop:cart', JSON.stringify(updatedCart));
+      localStorage.setItem('@BarberShop:Cart', JSON.stringify(updatedCart));
     } catch {
       toast.error('Erro na alteração de quantidade do produto');
     }

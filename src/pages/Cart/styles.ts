@@ -14,8 +14,6 @@ export const ShoppingCartContainer = styled.section`
     align-items: center;
     flex-direction: column;
 
-    
-
     > p {
       color: var(--color-gray-300);
       text-align: justify;
@@ -110,7 +108,10 @@ export const EmptyCart = styled.div`
 
 export const ProductContainer = styled.div`
   width: 100%;
-  overflow-x: scroll;
+
+  @media (max-width: 1124px) {
+    overflow-x: scroll;
+  }
 `;
 
 export const ProductTable = styled.table`
@@ -162,6 +163,7 @@ export const ProductTable = styled.table`
       color: var(--color-gray-300);
       padding: 6px;
       width: 50px;
+      text-align: center;
     }
   }
 
