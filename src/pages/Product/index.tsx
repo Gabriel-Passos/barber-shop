@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Carousel as RRCarousel } from 'react-responsive-carousel';
 import { FaCheckCircle } from 'react-icons/fa';
+import ReactLoading from 'react-loading';
 
 import { useCart } from '../../hooks/useCart';
 
@@ -25,7 +26,7 @@ import {
   InfoContainer,
 } from './styles';
 
-import { Section, Divider } from "../../styles/global";
+import { Section, Divider, LoadingContainer } from "../../styles/global";
 
 export function Product() {
   const [product, setProduct] = useState<ProductData>({} as ProductData);
@@ -37,13 +38,33 @@ export function Product() {
 
   useEffect(() => {
     const getProduct = async () => {
+      if (!productId) {
+        return;
+      }
+      
       const response = await api.get(`/products/${productId}`);
+
+      localStorage.setItem('@BarberShop:OneProduct', JSON.stringify(response.data));
 
       setProduct(response.data);
     }
 
     getProduct();
   }, [productId]);
+
+  useEffect(() => {
+    if (!product.id) {
+      setProduct(() => {
+        const storagedCart = localStorage.getItem('@BarberShop:OneProduct');
+    
+        if (storagedCart) {
+          return JSON.parse(storagedCart);
+        }
+    
+        return {};
+      });
+    }
+  }, [product]);
 
   const toggleShowDescription = () => {
     setShowAdditionalInfo(false);
@@ -63,126 +84,134 @@ export function Product() {
     <>
       <WhatsAppButton/>
 
-      <PageTitle 
-        path="shop"
-        pageName={product.productName}
-        productName={product.productName}
-        showProductName
-      />
+      {!product.id ? (
+        <LoadingContainer>
+          <ReactLoading type="spinningBubbles" color="#9e8462" height={80} width={80} />
+        </LoadingContainer>
+      ) : (
+        <>
+          <PageTitle 
+            path="shop"
+            pageName={product.productName}
+            productName={product.productName}
+            showProductName
+          />
 
-      <Section whiteBackground>
-        <ProductContainer>
-          <RRCarousel
-            emulateTouch
-            showThumbs={false}
-            showIndicators={false}
-            showStatus={false}
-            className="carousel-product"
-          >
-            <img 
-              src={product.productImage} 
-              alt={product.productName}
-              loading="lazy"
-            />
+          <Section whiteBackground>
+            <ProductContainer>
+              <RRCarousel
+                emulateTouch
+                showThumbs={false}
+                showIndicators={false}
+                showStatus={false}
+                className="carousel-product"
+              >
+                <img 
+                  src={product.productImage} 
+                  alt={product.productName}
+                  loading="lazy"
+                />
 
-            <img 
-              src={product.productImage} 
-              alt={product.productName}
-              loading="lazy"
-            />
-          </RRCarousel>
+                <img 
+                  src={product.productImage} 
+                  alt={product.productName}
+                  loading="lazy"
+                />
+              </RRCarousel>
 
-          <ProductInfos>
-            <h1>{product.productName}</h1>
+              <ProductInfos>
+                <h1>{product.productName}</h1>
 
-            <span>
-              {new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-              }).format(product.price)}
-            </span>
+                <span>
+                  {new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  }).format(product.price)}
+                </span>
 
-            <p>
-              {product.description}
-            </p>
+                <p>
+                  {product.description}
+                </p>
 
-            <Stock>
-              <FaCheckCircle size={20} color="#008000" />
+                <Stock>
+                  <FaCheckCircle size={20} color="#008000" />
 
-              <span>998 em estoque</span>
-            </Stock>
+                  <span>998 em estoque</span>
+                </Stock>
 
-            <CartButton 
-              type="button"
-              onClick={() => handleAddProduct(product.id)}
-            >
-              Adicionar ao carinho
-            </CartButton>
+                <CartButton 
+                  type="button"
+                  onClick={() => handleAddProduct(product.id)}
+                >
+                  Adicionar ao carinho
+                </CartButton>
 
-            <Divider lightLine />
+                <Divider lightLine />
 
-            <Categorys>
-              <strong>Categorias: </strong>
+                <Categorys>
+                  <strong>Categorias: </strong>
 
-              <a href="/">Hair Color</a>
-              <a href="/">Hair Color</a>
-            </Categorys>
-          </ProductInfos>
-        </ProductContainer>
-      </Section>
+                  <a href="/">Hair Color</a>
+                  <a href="/">Hair Color</a>
+                </Categorys>
+              </ProductInfos>
+            </ProductContainer>
+          </Section>
 
-      <Section whiteBackground>
-        <InfoContainer>
-          <InfoButtonsContainer>
-            <InfoButton
-             type="button" 
-             onClick={toggleShowDescription}
-             onActive={showDescription}
-            >
-              Descrição
-            </InfoButton>
+          <Section whiteBackground>
+            <InfoContainer>
+              <InfoButtonsContainer>
+                <InfoButton
+                type="button" 
+                onClick={toggleShowDescription}
+                onActive={showDescription}
+                >
+                  Descrição
+                </InfoButton>
 
-            <InfoButton 
-              type="button" 
-              onClick={toggleShowAdditionalInfo}
-              onActive={showAdditionalInfo}
-            >
-              Informação adicional
-            </InfoButton>
-          </InfoButtonsContainer>
+                <InfoButton 
+                  type="button" 
+                  onClick={toggleShowAdditionalInfo}
+                  onActive={showAdditionalInfo}
+                >
+                  Informação adicional
+                </InfoButton>
+              </InfoButtonsContainer>
 
-          {showDescription && (
-            <DescriptionContainer>
-              <h3>Descrição</h3>
-              
-              <strong>Paragraph text</strong>
+              {showDescription && (
+                <DescriptionContainer>
+                  <h3>Descrição</h3>
+                  
+                  <strong>Paragraph text</strong>
 
-              <p>
-                {product.description}
-              </p>
-            </DescriptionContainer>
-          )}
+                  <p>
+                    {product.description}
+                  </p>
+                </DescriptionContainer>
+              )}
 
-          {showAdditionalInfo && (
-            <AdditionalInfoContainer>
-              <h3>Informação adicional</h3>
+              {showAdditionalInfo && (
+                <AdditionalInfoContainer>
+                  <h3>Informação adicional</h3>
 
-              <table>
-                <tbody>
-                  <tr>
-                    <th>Peso</th>
-                    <td>15kg</td>
-                  </tr>
-                  <tr>
-                    <th>Dimensões</th>
-                    <td>124 x 451 x 215cm</td>
-                  </tr>
-                </tbody>
-              </table>
-            </AdditionalInfoContainer>
-          )}
-        </InfoContainer>
-      </Section>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <th>Peso</th>
+                        <td>15kg</td>
+                      </tr>
+                      <tr>
+                        <th>Dimensões</th>
+                        <td>124 x 451 x 215cm</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </AdditionalInfoContainer>
+              )}
+            </InfoContainer>
+          </Section>
+        </>
+      )}
 
       <ShippingBanner />
     </>

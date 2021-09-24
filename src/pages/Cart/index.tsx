@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-concat */
 import { Link } from 'react-router-dom';
 import { FaWhatsapp, FaShoppingCart } from 'react-icons/fa';
 import { MdRemoveCircleOutline, MdAddCircleOutline, MdDelete } from 'react-icons/md';
@@ -55,6 +56,10 @@ export function Cart() {
   const handleRemoveProduct = (productId: number) => {
     removeProduct(productId);
   }
+
+  const message = `Olá Barber Shop, desejo comprar os seguintes produtos: 
+    Quantidade/Produto: ${cart.map(cartItem => ` ${cartItem.amount} ` + ` ${cartItem.productName}`)} 
+  `;
 
   return (
     <>
@@ -154,11 +159,15 @@ export function Cart() {
                 </p>
 
                 <div>
-                  <button type="button">
+                  <a 
+                    href={`https://api.whatsapp.com/send?phone=${5514991663957}&text=${message}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <FaWhatsapp size={24} />
 
                     Finalizar pedido
-                  </button>
+                  </a>
 
                   <Total>
                     <span>TOTAL</span>
