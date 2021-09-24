@@ -31,13 +31,13 @@ export const ShoppingCartContainer = styled.section`
       @media (max-width: 620px) {
         flex-direction: column-reverse;
 
-        button {
+        a {
           margin-top: 16px;
         }
       }
     }
 
-    button {
+    a {
       display: flex;
       align-items: center;
 
@@ -48,6 +48,7 @@ export const ShoppingCartContainer = styled.section`
       padding: 12px 20px;
       font-weight: bold;
       text-transform: uppercase;
+      text-decoration: none;
       transition: background-color 0.2s;
 
       &:hover {

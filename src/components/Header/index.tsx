@@ -29,7 +29,7 @@ export function Header() {
       
       <div>
         <Navbar>
-          <a href="/">Home</a>
+          <a href="/home">Home</a>
           <a href="/shop">Shop</a>
         </Navbar>
       </div>
